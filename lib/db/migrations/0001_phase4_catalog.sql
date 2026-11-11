@@ -1,0 +1,33 @@
+ALTER TABLE "products" ADD COLUMN "images" jsonb DEFAULT '[]'::jsonb NOT NULL;
+ALTER TABLE "products" ADD COLUMN "sort_order" integer DEFAULT 0 NOT NULL;
+ALTER TABLE "products" ADD COLUMN "catalog_key" text;
+ALTER TABLE "products" ADD COLUMN "is_catalog_locked" boolean DEFAULT false NOT NULL;
+ALTER TABLE "products" ADD COLUMN "min_order_amount_toman" bigint;
+ALTER TABLE "products" ADD COLUMN "max_order_amount_toman" bigint;
+ALTER TABLE "products" ADD COLUMN "fixed_ancillary_cost_toman" bigint DEFAULT 0 NOT NULL;
+ALTER TABLE "products" ADD COLUMN "service_fee_bps" integer DEFAULT 0 NOT NULL;
+ALTER TABLE "products" ADD COLUMN "deleted_at" timestamp with time zone;
+CREATE UNIQUE INDEX "products_catalog_key_idx" ON "products" USING btree ("catalog_key");
+CREATE INDEX "products_sort_idx" ON "products" USING btree ("sort_order");
+CREATE INDEX "products_deleted_at_idx" ON "products" USING btree ("deleted_at");
+ALTER TABLE "products" ADD CONSTRAINT "products_service_fee_bps_chk" CHECK (service_fee_bps >= 0 AND service_fee_bps <= 10000);
+ALTER TABLE "products" ADD CONSTRAINT "products_order_amount_range_chk" CHECK (min_order_amount_toman IS NULL OR max_order_amount_toman IS NULL OR min_order_amount_toman <= max_order_amount_toman);
+ALTER TABLE "products" ADD CONSTRAINT "products_fixed_ancillary_nonneg_chk" CHECK (fixed_ancillary_cost_toman >= 0);
+
+ALTER TABLE "product_variants" ADD COLUMN "label_fa" text;
+ALTER TABLE "product_variants" ADD COLUMN "deleted_at" timestamp with time zone;
+
+ALTER TABLE "product_field_definitions" ADD COLUMN "label_en" text;
+ALTER TABLE "product_field_definitions" ADD COLUMN "label_fa" text;
+UPDATE "product_field_definitions" SET "label_en" = COALESCE("label", 'Field');
+UPDATE "product_field_definitions" SET "label_fa" = COALESCE("label", 'فیلد');
+ALTER TABLE "product_field_definitions" ALTER COLUMN "label_en" SET NOT NULL;
+ALTER TABLE "product_field_definitions" ALTER COLUMN "label_fa" SET NOT NULL;
+ALTER TABLE "product_field_definitions" DROP COLUMN IF EXISTS "label";
+ALTER TABLE "product_field_definitions" ALTER COLUMN "options" SET DEFAULT '[]'::jsonb;
+UPDATE "product_field_definitions" SET "options" = '[]'::jsonb WHERE "options" IS NULL;
+ALTER TABLE "product_field_definitions" ALTER COLUMN "options" SET NOT NULL;
+ALTER TABLE "product_field_definitions" ALTER COLUMN "validation" SET DEFAULT '{}'::jsonb;
+UPDATE "product_field_definitions" SET "validation" = '{}'::jsonb WHERE "validation" IS NULL;
+ALTER TABLE "product_field_definitions" ALTER COLUMN "validation" SET NOT NULL;
+ALTER TABLE "product_field_definitions" ADD COLUMN "visibility" jsonb;

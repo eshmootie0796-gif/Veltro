@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794381260660,
+      "tag": "0000_phase3_baseline",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794384000000,
+      "tag": "0001_phase4_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794385000000,
+      "tag": "0002_phase5_pricing",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794386000000,
+      "tag": "0003_phase6_orders",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794387000000,
+      "tag": "0004_phase7_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794388000000,
+      "tag": "0005_phase8_crypto_trading",
+      "breakpoints": true
+    }
+  ]
+}
